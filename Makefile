@@ -6,5 +6,7 @@ windows:
 	docker build --build-arg OS=windows --build-arg ARCH=$(shell wmic os get osarchitecture | findstr [0-9]) -t $(IMAGE_NAME) .
 macos:
 	docker build --build-arg OS=darwin --build-arg ARCH=$(shell arch) -t $(IMAGE_NAME) .
-clean:
+stop:
+	docker stop $(IMAGE_NAME):latest
+clean: stop
 	docker rmi -f $(IMAGE_NAME)
