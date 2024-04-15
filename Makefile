@@ -10,7 +10,7 @@ macos:
 	docker build --build-arg OS=darwin --build-arg ARCH=$(shell arch) -t $(IMAGE_NAME) .
 	docker run $(IMAGE_NAME)
 image:
-	docker build --build-arg OS=darwin --build-arg ARCH=$(shell arch) -t $(IMAGE_NAME) .
+	docker build --build-arg OS=linux --build-arg ARCH=arm64 -t $(IMAGE_NAME) .
 	docker run $(IMAGE_NAME)
 clean:
 	docker rmi -f $(IMAGE_NAME)
