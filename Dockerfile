@@ -2,7 +2,7 @@ ARG OS="windows"
 ARG ARCH="amd64"
 FROM quay.io/projectquay/golang:1.22 as builder
 WORKDIR /
-COPY . . 
+COPY /src . 
 EXPOSE 8080
 ARG OS
 ARG ARCH
