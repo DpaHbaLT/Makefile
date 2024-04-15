@@ -1,10 +1,9 @@
-ARG OS="windows"
-ARG ARCH="amd64"
-FROM quay.io/projectquay/golang:1.22 
-WORKDIR /src
-COPY  . .
-COPY html /var/tmp/html/
-EXPOSE 8080
-ARG OS
-ARG ARCH
-RUN GO_ENABLED=0 GOOS=$OS GOARCH=$ARCH go build -o bin/app main.go
+FROM golang:1.21 as builder
+WORKDIR /go/src/app
+COPY . .
+RUN make build
+FROM scratch
+WORKDIR /
+COPY --from=builder /go/src/app/kbot .
+COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+ENTRYPOINT ["./kbot"]
