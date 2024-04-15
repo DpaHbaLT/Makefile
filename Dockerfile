@@ -7,5 +7,5 @@ COPY html /var/tmp/html/
 EXPOSE 8080
 ARG OS
 ARG ARCH
-RUN GOOS=$OS GOARCH=$ARCH go build -o bin/app main.go
+RUN GO_ENABLED=0 GOOS=$OS GOARCH=$ARCH go build -o bin/app main.go
 ENTRYPOINT [ "bin/app" ]
