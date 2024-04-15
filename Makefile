@@ -1,29 +1,16 @@
-APP=$(shell basename $(shell git remote get-url origin))
-REGESTRY=umanetsvitaliy
-VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
-TARGETOS=linux
-TARGETARCH=amd64
+IMAGE_NAME=test_make
 
-format: 
-	gofmt -s -w ./
-
-get:
-	go get
-
-lint:
-	golint
-
-test: 
-	go test -v
-
-build: format get
-	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${shell dpkg --print-architecture} go build -v -o kbot -ldflags "-X="github.com/vit-um/kbot/cmd.appVersion=${VERSION}
-
+linux:
+	docker build --build-arg OS=linux --build-arg ARCH=arm64 -t $(IMAGE_NAME) .
+	docker run $(IMAGE_NAME)
+windows:
+	docker build --build-arg OS=windows --build-arg ARCH=$(shell wmic os get osarchitecture | findstr [0-9]) -t $(IMAGE_NAME) .
+	docker run $(IMAGE_NAME)
+macos:
+	docker build --build-arg OS=darwin --build-arg ARCH=$(shell arch) -t $(IMAGE_NAME) .
+	docker run $(IMAGE_NAME)
 image:
-	docker build . -t kbot
-
-push:
-	docker push ${REGESTRY}/${APP}:${VERSION}-${TARGETARCH}
-
-clean: 
-	rm -rf kbot
+	docker build --build-arg OS=linux --build-arg ARCH=arm64 -t $(IMAGE_NAME) .
+	docker run $(IMAGE_NAME)
+clean:
+	docker rmi -f $(IMAGE_NAME)
