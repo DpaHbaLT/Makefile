@@ -1,10 +1,11 @@
-FROM golang as builder
+ARG OS="windows"
+ARG ARCH="amd64"
+FROM quay.io/projectquay/golang:1.22 
 WORKDIR /src
-COPY src .
-RUN CGO_ENABLED=0 go build -o app
-
-FROM scratch
-ADD ./html /html
-COPY --from=builder /src/app .
-ENTRYPOINT ["/app"]
+COPY  . .
+COPY html /var/tmp/html/
 EXPOSE 8080
+ARG OS
+ARG ARCH
+RUN GOOS=$OS GOARCH=$ARCH go build -o bin/app main.go
+ENTRYPOINT [ "bin/app" ]
